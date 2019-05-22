@@ -73,18 +73,19 @@ class MotionDetectorAdaptative():
     def run(self):
         for frame in self.camera.capture_continuous(self.capture, format="bgr", use_video_port=True):
             currentframe = frame.array
-	        self.process_image(currentframe) # Process the image
+            # Process the image
+	        self.process_image(currentframe)
             movedRes = self.something_has_moved()
             if len(movedRes) > 0:
-		       cv.circle(currentframe, (movedRes[0], movedRes[1]), 5, (0, 0, 255), -1)
+                cv.circle(currentframe, (movedRes[0], movedRes[1]), 5, (0, 0, 255), -1)
 
-		       self.pos_x = abs(movedRes[0] - self.point_x_max) #invert movement of servo
-		       self.pos_y = abs(movedRes[1] - self.point_y_max) #invert movement of servo
+                self.pos_x = abs(movedRes[0] - self.point_x_max) #invert movement of servo
+                self.pos_y = abs(movedRes[1] - self.point_y_max) #invert movement of servo
 
-		       self.set_axis(0)
-		       self.set_axis(1)
-		       time.sleep(0.1)
-		       self.squirt(True)
+                self.set_axis(0)
+                self.set_axis(1)
+                time.sleep(0.1)
+self.squirt(True)
 		    else:
                 self.squirt(False)
                 print("Nothing moving...")

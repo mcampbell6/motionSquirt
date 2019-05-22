@@ -106,21 +106,21 @@ class MotionDetectorAdaptative():
         #subtract background from image mask
         self.fgmask = self.fgbg.apply(curframe)
 
-	    #create a green mask to remove all green from motion detection (trees and plants and grass and what not)
-	    lower = np.array([38, 90, 40])
-	    upper = np.array([102, 255, 255])
-	    hsv = cv.cvtColor(curframe, cv.COLOR_BGR2HSV)
-	    mask = cv.inRange(hsv, lower, upper)
-	    kernelOpen = np.ones((5,5))
-	    kernelClose = np.ones((20,20))
-	    maskOpen = cv.morphologyEx(mask, cv.MORPH_OPEN, kernelOpen)
-	    maskClose = cv.morphologyEx(maskOpen,cv.MORPH_CLOSE,kernelClose)
+        #create a green mask to remove all green from motion detection (trees and plants and grass and what not)
+        lower = np.array([38, 90, 40])
+        upper = np.array([102, 255, 255])
+        hsv = cv.cvtColor(curframe, cv.COLOR_BGR2HSV)
+        mask = cv.inRange(hsv, lower, upper)
+        kernelOpen = np.ones((5,5))
+        kernelClose = np.ones((20,20))
+        maskOpen = cv.morphologyEx(mask, cv.MORPH_OPEN, kernelOpen)
+        maskClose = cv.morphologyEx(maskOpen,cv.MORPH_CLOSE,kernelClose)
 
-	    #invert mask so green is removed
-	    self.grmask =  255 - maskClose
+        #invert mask so green is removed
+        self.grmask =  255 - maskClose
 
-	    #combine masks
-	    self.finmask = self.grmask & self.fgmask
+        #combine masks
+        self.finmask = self.grmask & self.fgmask
 
 
     def something_has_moved(self):

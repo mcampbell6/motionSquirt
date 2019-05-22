@@ -85,7 +85,7 @@ class MotionDetectorAdaptative():
                 self.set_axis(1)
                 time.sleep(0.1)
                 self.squirt(True)
-		    else:
+            else:
                 self.squirt(False)
                 print("Nothing moving...")
 

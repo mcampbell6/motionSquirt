@@ -128,11 +128,11 @@ class MotionDetectorAdaptative():
         _, contours, _ = cv.findContours(self.finmask, cv.RETR_EXTERNAL, cv.CHAIN_APPROX_SIMPLE)
         self.currentcontours = contours  # Save contours
 
-	    totX = 0
-	    totY = 0
-	    totAvgX = 0
-	    totAvgY = 0
-	    count = 0
+        totX = 0
+        totY = 0
+        totAvgX = 0
+        totAvgY = 0
+        count = 0
         for contour in contours:
             self.currentsurface += cv.contourArea(contour)
             maxC = max(contours, key=cv.contourArea)
@@ -143,20 +143,20 @@ class MotionDetectorAdaptative():
                 totX += cX
                 totY += cY
                 count += 1
-	    if count > 0:
-	        totAvgX = totX/count
-		    totAvgY = totY/count
+        if count > 0:
+            totAvgX = totX/count
+            totAvgY = totY/count
 
-    	avg = (self.currentsurface * 100) / self.surface  # Calculate the average of contour area on the total size
+        avg = (self.currentsurface * 100) / self.surface  # Calculate the average of contour area on the total size
             self.currentsurface = 0  # Put back the current surface to 0
-    	print('avg threshold ' + str(avg))
+        print('avg threshold ' + str(avg))
 
         if avg > 8 and avg < 50:
             #Stop background subtraction from tweaking out
-    		self.fgbg = cv.createBackgroundSubtractorMOG2(history=self.hist, varThreshold=self.thresh, detectShadows=self.shadows)
-    		return []
-    	if avg > 50:
-    		return []
+        	self.fgbg = cv.createBackgroundSubtractorMOG2(history=self.hist, varThreshold=self.thresh, detectShadows=self.shadows)
+        	return []
+        if avg > 50:
+        	return []
         if avg > self.threshold:
             return [totAvgX, totAvgY]
         else:

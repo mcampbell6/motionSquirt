@@ -14,60 +14,60 @@ class MotionDetectorAdaptative():
         self.threshold = val
 
     def __init__(self, threshold=1, show_windwos=True):
-	#Servo config
-	self.pwm = Adafruit_PCA9685.PCA9685()
-	self.pwm.set_pwm_freq(60)
-	self.pos_x = 300
-	self.pos_y = 300
+    	#Servo config
+    	self.pwm = Adafruit_PCA9685.PCA9685()
+    	self.pwm.set_pwm_freq(60)
+    	self.pos_x = 300
+    	self.pos_y = 300
 
-	self.point_y_max = 480
-	self.point_x_max = 640
+    	self.point_y_max = 480
+    	self.point_x_max = 640
 
-	self.servo_x_min = 100
-	self.servo_x_max = 500
-	self.servo_y_min = 475
-	self.servo_y_max = 575
+    	self.servo_x_min = 100
+    	self.servo_x_max = 500
+    	self.servo_y_min = 475
+    	self.servo_y_max = 575
 
-	#5v Relay for water solenoid config
-	self.relay_gpio = 17
-	GPIO.setup(self.relay_gpio, GPIO.OUT)
-	GPIO.output(self.relay_gpio, GPIO.LOW)
-	self.is_squirting = False
-    self.show = show_windwos  # Either or not show the 2 windows
-    self.frame = None
+    	#5v Relay for water solenoid config
+    	self.relay_gpio = 17
+    	GPIO.setup(self.relay_gpio, GPIO.OUT)
+    	GPIO.output(self.relay_gpio, GPIO.LOW)
+    	self.is_squirting = False
+        self.show = show_windwos  # Either or not show the 2 windows
+        self.frame = None
 
-	#picamera
-	self.camera = PiCamera()
-	self.camera.resolution = (self.point_x_max, self.point_y_max)
-	self.camera.framerate = 32
-	self.camera.vflip = True
-	time.sleep(2)
-	self.camera.saturation = 50
-	self.camera.brightness = 60
-	self.capture = PiRGBArray(self.camera, size=(self.point_x_max, self.point_y_max))
+    	#picamera
+    	self.camera = PiCamera()
+    	self.camera.resolution = (self.point_x_max, self.point_y_max)
+    	self.camera.framerate = 32
+    	self.camera.vflip = True
+    	time.sleep(2)
+    	self.camera.saturation = 50
+    	self.camera.brightness = 60
+    	self.capture = PiRGBArray(self.camera, size=(self.point_x_max, self.point_y_max))
 
-	#background subtraction tool
-	self.hist = 5000
-	self.thresh = 16
-	self.shadows = False
-	self.fgbg = cv.createBackgroundSubtractorMOG2(history=self.hist, varThreshold=self.thresh, detectShadows=self.shadows)
-	self.grmask = None
+    	#background subtraction tool
+    	self.hist = 5000
+    	self.thresh = 16
+    	self.shadows = False
+    	self.fgbg = cv.createBackgroundSubtractorMOG2(history=self.hist, varThreshold=self.thresh, detectShadows=self.shadows)
+    	self.grmask = None
 
-    self.gray_frame = np.zeros((self.point_y_max, self.point_x_max), dtype=np.uint8)
-    self.average_frame = np.zeros((self.point_y_max, self.point_x_max, 3), np.float32)
-    self.absdiff_frame = None
-    self.previous_frame = None
+        self.gray_frame = np.zeros((self.point_y_max, self.point_x_max), dtype=np.uint8)
+        self.average_frame = np.zeros((self.point_y_max, self.point_x_max, 3), np.float32)
+        self.absdiff_frame = None
+        self.previous_frame = None
 
-    self.surface = self.point_x_max * self.point_y_max
-    self.currentsurface = 0
-    self.currentcontours = None
-    self.threshold = threshold
-    if show_windwos:
-        cv.namedWindow("Image")
-        cv.createTrackbar("Detection treshold: ", "Image", self.threshold, 100, self.onChange)
+        self.surface = self.point_x_max * self.point_y_max
+        self.currentsurface = 0
+        self.currentcontours = None
+        self.threshold = threshold
+        if show_windwos:
+            cv.namedWindow("Image")
+            cv.createTrackbar("Detection treshold: ", "Image", self.threshold, 100, self.onChange)
 
-	self.set_axis(0)
-	self.set_axis(1)
+    	self.set_axis(0)
+    	self.set_axis(1)
 
 
     def run(self):

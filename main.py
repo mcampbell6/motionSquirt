@@ -148,7 +148,7 @@ class MotionDetectorAdaptative():
             totAvgY = totY/count
 
         avg = (self.currentsurface * 100) / self.surface  # Calculate the average of contour area on the total size
-            self.currentsurface = 0  # Put back the current surface to 0
+        self.currentsurface = 0  # Put back the current surface to 0
         print('avg threshold ' + str(avg))
 
         if avg > 8 and avg < 50:

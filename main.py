@@ -13,7 +13,7 @@ class MotionDetectorAdaptative():
     def onChange(self, val):  # callback when the user change the detection threshold
         self.threshold = val
 
-    def __init__(self, threshold=1, show_windwos=True):
+    def __init__(self, threshold=1, show_windwos=False):
     	#Servo config
     	self.pwm = Adafruit_PCA9685.PCA9685()
     	self.pwm.set_pwm_freq(60)
